@@ -1,0 +1,33 @@
+# ============================================================
+# SIGE - .gitignore
+# ============================================================
+
+# Variáveis de ambiente com segredos
+backend/.env
+frontend/.env
+
+# Dependências
+backend/vendor/
+frontend/node_modules/
+frontend/dist/
+
+# Logs
+*.log
+backend/logs/
+nginx/logs/
+
+# Binários portáteis (criados em desenvolvimento local)
+.local/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# PHP
+*.cache
