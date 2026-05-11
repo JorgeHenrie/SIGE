@@ -48,4 +48,47 @@ class RelatorioRepositorio
         ");
         return $stmt->fetchAll();
     }
+
+    public function combustivelSemanal(): array
+    {
+        $stmt = $this->pdo->query("
+            SELECT * FROM sige.vw_relatorio_combustivel_semanal
+            ORDER BY semana_referencia DESC
+        ");
+        return $stmt->fetchAll();
+    }
+
+    public function combustivelMensal(): array
+    {
+        $stmt = $this->pdo->query("
+            SELECT * FROM sige.vw_relatorio_combustivel_mensal
+            ORDER BY mes_referencia DESC
+        ");
+        return $stmt->fetchAll();
+    }
+
+    public function combustivelPorLider(): array
+    {
+        $stmt = $this->pdo->query("
+            SELECT * FROM sige.vw_relatorio_combustivel_por_lider
+            ORDER BY total_gasto DESC, total_abastecimentos DESC, lider_nome ASC
+        ");
+        return $stmt->fetchAll();
+    }
+    
+    public function combustivelAlertas(): array
+    {
+        $stmt = $this->pdo->query("
+            SELECT * FROM sige.vw_relatorio_combustivel_alertas
+            ORDER BY
+                CASE alerta_nivel
+                    WHEN 'alto' THEN 1
+                    WHEN 'medio' THEN 2
+                    ELSE 3
+                END,
+                data_abastecimento DESC,
+                placa_veiculo ASC
+        ");
+        return $stmt->fetchAll();
+    }
 }

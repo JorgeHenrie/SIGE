@@ -32,6 +32,10 @@ class LiderValidador
             $erros[] = 'Votos estimados deve ser um número inteiro não negativo.';
         }
 
+        if (array_key_exists('salario_mensal', $dados) && !self::salarioValido($dados['salario_mensal'])) {
+            $erros[] = 'O salário mensal deve ser numérico e maior que zero.';
+        }
+
         return $erros;
     }
 
@@ -47,6 +51,15 @@ class LiderValidador
             $erros[] = 'Votos estimados deve ser um número inteiro não negativo.';
         }
 
+        if (array_key_exists('salario_mensal', $dados) && !self::salarioValido($dados['salario_mensal'])) {
+            $erros[] = 'O salário mensal deve ser numérico e maior que zero.';
+        }
+
         return $erros;
+    }
+
+    private static function salarioValido(mixed $valor): bool
+    {
+        return $valor !== '' && $valor !== null && is_numeric($valor) && (float) $valor > 0;
     }
 }

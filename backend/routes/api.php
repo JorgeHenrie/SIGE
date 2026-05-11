@@ -5,7 +5,9 @@ declare(strict_types=1);
 use App\Controllers\AuthController;
 use App\Controllers\AgendaController;
 use App\Controllers\ApoiadorController;
+use App\Controllers\CombustivelController;
 use App\Controllers\LiderController;
+use App\Controllers\RoteiroController;
 use App\Controllers\RelatorioController;
 
 // ============================================================
@@ -41,6 +43,29 @@ $roteador->get('/api/relatorios/resumo',          [RelatorioController::class, '
 $roteador->get('/api/relatorios/por-lider',       [RelatorioController::class, 'porLider']);
 $roteador->get('/api/relatorios/por-bairro',      [RelatorioController::class, 'porBairro']);
 $roteador->get('/api/relatorios/consolidado',     [RelatorioController::class, 'consolidado']);
+$roteador->get('/api/relatorios/combustivel-semanal',   [RelatorioController::class, 'combustivelSemanal']);
+$roteador->get('/api/relatorios/combustivel-mensal',    [RelatorioController::class, 'combustivelMensal']);
+$roteador->get('/api/relatorios/combustivel-por-lider', [RelatorioController::class, 'combustivelPorLider']);
+$roteador->get('/api/relatorios/combustivel-alertas',   [RelatorioController::class, 'combustivelAlertas']);
+
+// ============================================================
+// ROTAS — COMBUSTÍVEL
+// ============================================================
+$roteador->get('/api/combustivel',                [CombustivelController::class, 'listar']);
+$roteador->post('/api/combustivel',               [CombustivelController::class, 'cadastrar']);
+$roteador->get('/api/combustivel/{id}',           [CombustivelController::class, 'visualizar']);
+$roteador->put('/api/combustivel/{id}',           [CombustivelController::class, 'atualizar']);
+$roteador->delete('/api/combustivel/{id}',        [CombustivelController::class, 'remover']);
+
+// ============================================================
+// ROTAS — ROTEIRIZAÇÃO INTELIGENTE
+// ============================================================
+$roteador->post('/api/roteiros/sugerir',          [RoteiroController::class, 'sugerir']);
+$roteador->get('/api/roteiros',                   [RoteiroController::class, 'listar']);
+$roteador->post('/api/roteiros',                  [RoteiroController::class, 'cadastrar']);
+$roteador->get('/api/roteiros/{id}',              [RoteiroController::class, 'visualizar']);
+$roteador->put('/api/roteiros/{id}/recalcular',   [RoteiroController::class, 'recalcular']);
+$roteador->delete('/api/roteiros/{id}',           [RoteiroController::class, 'remover']);
 
 // ============================================================
 // ROTAS — AGENDA

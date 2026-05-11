@@ -34,4 +34,24 @@ class RelatorioServico
     {
         return $this->repositorio->consolidado();
     }
+
+    public function combustivelSemanal(): array
+    {
+        return $this->repositorio->combustivelSemanal();
+    }
+
+    public function combustivelMensal(): array
+    {
+        return $this->repositorio->combustivelMensal();
+    }
+
+    public function combustivelPorLider(): array
+    {
+        return $this->repositorio->combustivelPorLider();
+    }
+
+    public function combustivelAlertas(): array
+    {
+        return $this->repositorio->combustivelAlertas();
+    }
 }
