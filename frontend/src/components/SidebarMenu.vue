@@ -131,6 +131,16 @@ const itensMenu = [
     </svg>`,
   },
   {
+    rota: '/equipe-campanha',
+    label: 'Equipe de campanha',
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="7" r="4"/>
+      <path d="M5.5 21a6.5 6.5 0 0 1 13 0"/>
+      <path d="M3 11h3"/>
+      <path d="M18 11h3"/>
+    </svg>`,
+  },
+  {
     rota: '/agenda',
     label: 'Agenda',
     icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -148,6 +158,16 @@ const itensMenu = [
       <path d="M5 21V7a2 2 0 0 1 2-2h5a2 2 0 0 1 2 2v14"/>
       <path d="M14 11h2a2 2 0 0 1 2 2v8"/>
       <path d="M8 9h4"/>
+    </svg>`,
+  },
+  {
+    rota: '/financeiro',
+    label: 'Financeiro',
+    icone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 6h18"/>
+      <path d="M7 12h10"/>
+      <path d="M10 18h4"/>
+      <circle cx="18" cy="18" r="3"/>
     </svg>`,
   },
   {

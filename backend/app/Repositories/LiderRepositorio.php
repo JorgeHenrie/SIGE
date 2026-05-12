@@ -74,16 +74,9 @@ class LiderRepositorio
     {
         $stmt = $this->pdo->prepare("
             INSERT INTO sige.lideres
-                (nome, cpf, cpf_hash, telefone, bairro, votos_estimados, observacoes, status, criado_por)
+                (nome, cpf, cpf_hash, telefone, bairro, votos_estimados, salario_mensal, equipe_area, equipe_funcao, observacoes, status, criado_por)
             VALUES
-                (:nome, :cpf, :cpf_hash, :telefone, :bairro, :votos_estimados, :observacoes, :status, :criado_por)
-            RETURNING id
-        ");
-        $stmt = $this->pdo->prepare("
-            INSERT INTO sige.lideres
-                (nome, cpf, cpf_hash, telefone, bairro, votos_estimados, salario_mensal, observacoes, status, criado_por)
-            VALUES
-                (:nome, :cpf, :cpf_hash, :telefone, :bairro, :votos_estimados, :salario_mensal, :observacoes, :status, :criado_por)
+                (:nome, :cpf, :cpf_hash, :telefone, :bairro, :votos_estimados, :salario_mensal, :equipe_area, :equipe_funcao, :observacoes, :status, :criado_por)
             RETURNING id
         ");
 
@@ -95,6 +88,8 @@ class LiderRepositorio
             ':bairro'          => $dados['bairro'] ?? null,
             ':votos_estimados' => $dados['votos_estimados'] ?? 0,
             ':salario_mensal'  => $dados['salario_mensal'] ?? null,
+            ':equipe_area'     => $dados['equipe_area'] ?? null,
+            ':equipe_funcao'   => $dados['equipe_funcao'] ?? null,
             ':observacoes'     => $dados['observacoes'] ?? null,
             ':status'          => isset($dados['status']) ? (bool) $dados['status'] : true,
             ':criado_por'      => $dados['criado_por'] ?? null,
@@ -115,6 +110,8 @@ class LiderRepositorio
             'bairro'          => ':bairro',
             'votos_estimados' => ':votos_estimados',
             'salario_mensal'  => ':salario_mensal',
+            'equipe_area'     => ':equipe_area',
+            'equipe_funcao'   => ':equipe_funcao',
             'observacoes'     => ':observacoes',
             'status'          => ':status',
         ];

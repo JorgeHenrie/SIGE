@@ -6,6 +6,7 @@ use App\Controllers\AuthController;
 use App\Controllers\AgendaController;
 use App\Controllers\ApoiadorController;
 use App\Controllers\CombustivelController;
+use App\Controllers\FinanceiroController;
 use App\Controllers\LiderController;
 use App\Controllers\RoteiroController;
 use App\Controllers\RelatorioController;
@@ -56,6 +57,34 @@ $roteador->post('/api/combustivel',               [CombustivelController::class,
 $roteador->get('/api/combustivel/{id}',           [CombustivelController::class, 'visualizar']);
 $roteador->put('/api/combustivel/{id}',           [CombustivelController::class, 'atualizar']);
 $roteador->delete('/api/combustivel/{id}',        [CombustivelController::class, 'remover']);
+
+// ============================================================
+// ROTAS — FINANCEIRO DE CAMPANHA
+// ============================================================
+$roteador->get('/api/financeiro/fornecedores',            [FinanceiroController::class, 'listarFornecedores']);
+$roteador->post('/api/financeiro/fornecedores',           [FinanceiroController::class, 'cadastrarFornecedor']);
+$roteador->get('/api/financeiro/fornecedores/{id}',       [FinanceiroController::class, 'visualizarFornecedor']);
+$roteador->put('/api/financeiro/fornecedores/{id}',       [FinanceiroController::class, 'atualizarFornecedor']);
+$roteador->delete('/api/financeiro/fornecedores/{id}',    [FinanceiroController::class, 'removerFornecedor']);
+
+$roteador->get('/api/financeiro/receitas',                [FinanceiroController::class, 'listarReceitas']);
+$roteador->post('/api/financeiro/receitas',               [FinanceiroController::class, 'cadastrarReceita']);
+$roteador->get('/api/financeiro/receitas/{id}',           [FinanceiroController::class, 'visualizarReceita']);
+$roteador->put('/api/financeiro/receitas/{id}',           [FinanceiroController::class, 'atualizarReceita']);
+$roteador->delete('/api/financeiro/receitas/{id}',        [FinanceiroController::class, 'removerReceita']);
+
+$roteador->get('/api/financeiro/despesas',                [FinanceiroController::class, 'listarDespesas']);
+$roteador->post('/api/financeiro/despesas',               [FinanceiroController::class, 'cadastrarDespesa']);
+$roteador->post('/api/financeiro/despesas/pessoal/lideres', [FinanceiroController::class, 'lancarDespesaPessoalLider']);
+$roteador->get('/api/financeiro/despesas/{id}',           [FinanceiroController::class, 'visualizarDespesa']);
+$roteador->put('/api/financeiro/despesas/{id}',           [FinanceiroController::class, 'atualizarDespesa']);
+$roteador->delete('/api/financeiro/despesas/{id}',        [FinanceiroController::class, 'removerDespesa']);
+
+$roteador->get('/api/financeiro/saldos',                  [FinanceiroController::class, 'saldos']);
+$roteador->get('/api/financeiro/relatorios/inteligente',  [FinanceiroController::class, 'relatorioInteligente']);
+$roteador->get('/api/financeiro/alertas',                 [FinanceiroController::class, 'alertas']);
+$roteador->get('/api/financeiro/auditoria',               [FinanceiroController::class, 'auditoria']);
+$roteador->get('/api/financeiro/prestacao-contas',        [FinanceiroController::class, 'prestacaoContas']);
 
 // ============================================================
 // ROTAS — ROTEIRIZAÇÃO INTELIGENTE

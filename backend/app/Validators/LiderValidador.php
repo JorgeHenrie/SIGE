@@ -9,6 +9,14 @@ use App\Auxiliares\CpfAuxiliar;
 class LiderValidador
 {
     private const STATUS_VALIDOS = [true, false, 'true', 'false', 1, 0, '1', '0'];
+    private const AREAS_EQUIPE_VALIDAS = [
+        'direcao_estrategia',
+        'financeiro_juridico',
+        'marketing_comunicacao',
+        'operacao_rua',
+        'logistica',
+        'agenda_apoio',
+    ];
 
     public static function validarCadastro(array $dados): array
     {
@@ -36,6 +44,14 @@ class LiderValidador
             $erros[] = 'O salário mensal deve ser numérico e maior que zero.';
         }
 
+        if (!empty($dados['equipe_area']) && !in_array((string) $dados['equipe_area'], self::AREAS_EQUIPE_VALIDAS, true)) {
+            $erros[] = 'A área da equipe informada é inválida.';
+        }
+
+        if (array_key_exists('equipe_funcao', $dados) && mb_strlen(trim((string) ($dados['equipe_funcao'] ?? ''))) > 120) {
+            $erros[] = 'A função na equipe deve ter no máximo 120 caracteres.';
+        }
+
         return $erros;
     }
 
@@ -53,6 +69,14 @@ class LiderValidador
 
         if (array_key_exists('salario_mensal', $dados) && !self::salarioValido($dados['salario_mensal'])) {
             $erros[] = 'O salário mensal deve ser numérico e maior que zero.';
+        }
+
+        if (array_key_exists('equipe_area', $dados) && !empty($dados['equipe_area']) && !in_array((string) $dados['equipe_area'], self::AREAS_EQUIPE_VALIDAS, true)) {
+            $erros[] = 'A área da equipe informada é inválida.';
+        }
+
+        if (array_key_exists('equipe_funcao', $dados) && mb_strlen(trim((string) ($dados['equipe_funcao'] ?? ''))) > 120) {
+            $erros[] = 'A função na equipe deve ter no máximo 120 caracteres.';
         }
 
         return $erros;

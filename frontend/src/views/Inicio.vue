@@ -37,6 +37,20 @@
         <span class="modulo-cta">Abrir →</span>
       </button>
 
+      <button class="modulo-card modulo-card--equipe" @click="ir('/equipe-campanha')">
+        <span class="modulo-icone">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="7" r="4"/>
+            <path d="M5.5 21a6.5 6.5 0 0 1 13 0"/>
+            <path d="M3 11h3"/>
+            <path d="M18 11h3"/>
+          </svg>
+        </span>
+        <strong class="modulo-titulo">Equipe de campanha</strong>
+        <p class="modulo-desc">Mapa da força por área com cadastro e categorização dos membros.</p>
+        <span class="modulo-cta">Organizar equipe →</span>
+      </button>
+
       <button class="modulo-card modulo-card--lideres" @click="ir('/lideres')">
         <span class="modulo-icone">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -259,6 +273,7 @@ onMounted(async () => {
 
 .modulo-card--dashboard  { background: linear-gradient(150deg, #eff6ff 0%, #dbeafe 100%); }
 .modulo-card--lideres    { background: linear-gradient(150deg, #eef2ff 0%, #e0e7ff 100%); }
+.modulo-card--equipe     { background: linear-gradient(150deg, #f0fdf4 0%, #dcfce7 100%); }
 .modulo-card--agenda     { background: linear-gradient(150deg, #ecfdf5 0%, #d1fae5 100%); }
 .modulo-card--combustivel{ background: linear-gradient(150deg, #fff7ed 0%, #fed7aa 100%); }
 .modulo-card--relatorios { background: linear-gradient(150deg, #ecfeff 0%, #cffafe 100%); }

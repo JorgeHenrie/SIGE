@@ -49,6 +49,12 @@ const rotas = [
     meta: { titulo: 'Editar Líder', requiresAuth: true },
   },
   {
+    path: '/equipe-campanha',
+    name: 'equipe-campanha',
+    component: () => import('@/views/equipe/EquipeCampanha.vue'),
+    meta: { titulo: 'Equipe de campanha', requiresAuth: true },
+  },
+  {
     path: '/apoiadores',
     name: 'apoiadores',
     component: () => import('@/views/apoiadores/ListaApoiadores.vue'),
@@ -89,6 +95,12 @@ const rotas = [
     name: 'combustivel',
     component: () => import('@/views/combustivel/ListaCombustivel.vue'),
     meta: { titulo: 'Combustível', requiresAuth: true },
+  },
+  {
+    path: '/financeiro',
+    name: 'financeiro',
+    component: () => import('@/views/financeiro/FinanceiroCampanha.vue'),
+    meta: { titulo: 'Financeiro', requiresAuth: true },
   },
   {
     path: '/combustivel/novo',

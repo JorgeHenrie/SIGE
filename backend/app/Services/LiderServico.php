@@ -14,10 +14,12 @@ use App\Validators\LiderValidador;
 class LiderServico
 {
     private LiderRepositorio $repositorio;
+    private FinanceiroServico $financeiroServico;
 
     public function __construct()
     {
         $this->repositorio = new LiderRepositorio();
+        $this->financeiroServico = new FinanceiroServico();
     }
 
     public function listar(int $pagina, int $limite, string $busca, array $auth): array
@@ -65,7 +67,30 @@ class LiderServico
             $dados['salario_mensal'] = $this->normalizarSalario($dados['salario_mensal']);
         }
 
-        return $this->sanitizarContrato($this->repositorio->criar($dados), $auth);
+        if (array_key_exists('equipe_area', $dados)) {
+            $dados['equipe_area'] = $this->normalizarTexto($dados['equipe_area'] ?? null);
+        }
+
+        if (array_key_exists('equipe_funcao', $dados)) {
+            $dados['equipe_funcao'] = $this->normalizarTexto($dados['equipe_funcao'] ?? null);
+        }
+
+        $liderCriado = $this->repositorio->criar($dados);
+
+        try {
+            $this->financeiroServico->lancarDespesaPessoalLider([
+                'lider_id' => (string) $liderCriado['id'],
+                'data' => date('Y-m-d'),
+            ], $auth);
+        } catch (\Throwable $e) {
+            $this->repositorio->remover((string) $liderCriado['id']);
+
+            throw new ValidacaoException([
+                'Nao foi possivel concluir o cadastro do lider porque a despesa salarial automatica falhou. Verifique se existe receita com saldo suficiente na campanha.',
+            ]);
+        }
+
+        return $this->sanitizarContrato($liderCriado, $auth);
     }
 
     public function atualizar(string $id, array $dados, array $auth): array
@@ -82,6 +107,14 @@ class LiderServico
 
         if (array_key_exists('salario_mensal', $dados) && $dados['salario_mensal'] !== '' && $dados['salario_mensal'] !== null) {
             $dados['salario_mensal'] = $this->normalizarSalario($dados['salario_mensal']);
+        }
+
+        if (array_key_exists('equipe_area', $dados)) {
+            $dados['equipe_area'] = $this->normalizarTexto($dados['equipe_area'] ?? null);
+        }
+
+        if (array_key_exists('equipe_funcao', $dados)) {
+            $dados['equipe_funcao'] = $this->normalizarTexto($dados['equipe_funcao'] ?? null);
         }
 
         $resultado = $this->repositorio->atualizar($id, $dados);
@@ -137,5 +170,15 @@ class LiderServico
     private function normalizarSalario(mixed $valor): string
     {
         return number_format((float) $valor, 2, '.', '');
+    }
+
+    private function normalizarTexto(?string $valor): ?string
+    {
+        if ($valor === null) {
+            return null;
+        }
+
+        $texto = trim($valor);
+        return $texto === '' ? null : $texto;
     }
 }
