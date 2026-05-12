@@ -49,6 +49,12 @@ const rotas = [
     meta: { titulo: 'Editar Líder', requiresAuth: true },
   },
   {
+    path: '/equipe-campanha',
+    name: 'equipe-campanha',
+    component: () => import('@/views/equipe/EquipeCampanha.vue'),
+    meta: { titulo: 'Equipe de campanha', requiresAuth: true },
+  },
+  {
     path: '/apoiadores',
     name: 'apoiadores',
     component: () => import('@/views/apoiadores/ListaApoiadores.vue'),
@@ -85,10 +91,52 @@ const rotas = [
     meta: { titulo: 'Editar Solicitação', requiresAuth: true },
   },
   {
+    path: '/combustivel',
+    name: 'combustivel',
+    component: () => import('@/views/combustivel/ListaCombustivel.vue'),
+    meta: { titulo: 'Combustível', requiresAuth: true },
+  },
+  {
+    path: '/financeiro',
+    name: 'financeiro',
+    component: () => import('@/views/financeiro/FinanceiroCampanha.vue'),
+    meta: { titulo: 'Financeiro', requiresAuth: true },
+  },
+  {
+    path: '/combustivel/novo',
+    name: 'combustivel-novo',
+    component: () => import('@/views/combustivel/FormCombustivel.vue'),
+    meta: { titulo: 'Novo Abastecimento', requiresAuth: true },
+  },
+  {
+    path: '/combustivel/:id/editar',
+    name: 'combustivel-editar',
+    component: () => import('@/views/combustivel/FormCombustivel.vue'),
+    meta: { titulo: 'Editar Abastecimento', requiresAuth: true },
+  },
+  {
     path: '/relatorios',
     name: 'relatorios',
     component: () => import('@/views/relatorios/Relatorios.vue'),
     meta: { titulo: 'Relatórios', requiresAuth: true },
+  },
+  {
+    path: '/roteiros',
+    name: 'roteiros',
+    component: () => import('@/views/roteiros/ListaRoteiros.vue'),
+    meta: { titulo: 'Roteirização', requiresAuth: true },
+  },
+  {
+    path: '/roteiros/novo',
+    name: 'roteiros-novo',
+    component: () => import('@/views/roteiros/FormRoteiro.vue'),
+    meta: { titulo: 'Novo Roteiro', requiresAuth: true },
+  },
+  {
+    path: '/roteiros/:id',
+    name: 'roteiros-detalhe',
+    component: () => import('@/views/roteiros/FormRoteiro.vue'),
+    meta: { titulo: 'Detalhe do Roteiro', requiresAuth: true },
   },
 ]
 

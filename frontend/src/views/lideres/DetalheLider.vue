@@ -12,6 +12,7 @@
       <div class="linha-info"><strong>Bairro/Região:</strong> {{ store.liderAtual.bairro || '—' }}</div>
       <div class="linha-info"><strong>Telefone:</strong> {{ store.liderAtual.telefone || '—' }}</div>
       <div class="linha-info"><strong>Votos Estimados:</strong> {{ store.liderAtual.votos_estimados }}</div>
+      <div v-if="mostrarSalario" class="linha-info"><strong>Salário contratual:</strong> {{ formatarMoeda(store.liderAtual.salario_mensal) }}</div>
       <div class="linha-info"><strong>Cadastrado por:</strong> {{ store.liderAtual.criado_por_nome || '—' }}</div>
       <div class="linha-info"><strong>Status:</strong> {{ store.liderAtual.status ? 'Ativo' : 'Inativo' }}</div>
       <div class="linha-info"><strong>Observações:</strong> {{ store.liderAtual.observacoes || '—' }}</div>
@@ -34,9 +35,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useLiderStore } from '@/stores/liderStore.js'
+import { useAuthStore } from '@/stores/authStore.js'
 import liderServico from '@/services/liderServico.js'
 import TabelaDados from '@/components/TabelaDados.vue'
 import BotaoAcao from '@/components/BotaoAcao.vue'
@@ -45,9 +47,11 @@ import AlertaMensagem from '@/components/AlertaMensagem.vue'
 const rota     = useRoute()
 const roteador = useRouter()
 const store    = useLiderStore()
+const authStore = useAuthStore()
 
 const apoiadores          = ref([])
 const carregandoApoiadores = ref(false)
+const mostrarSalario = computed(() => authStore.usuario?.perfil === 'admin')
 
 const colunas = [
   { chave: 'nome',           label: 'Nome' },
@@ -73,5 +77,14 @@ async function carregarApoiadores() {
 
 function novoApoiador() {
   roteador.push({ name: 'apoiadores-novo', query: { lider_id: rota.params.id } })
+}
+
+function formatarMoeda(valor) {
+  if (valor === null || valor === undefined || valor === '') return '—'
+
+  return Number(valor).toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  })
 }
 </script>

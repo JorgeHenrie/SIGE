@@ -56,6 +56,7 @@
             <th>Nome</th>
             <th>Bairro</th>
             <th>Votos Est.</th>
+            <th v-if="mostrarSalario">Salário</th>
             <th>Cadastrado por</th>
             <th>Status</th>
             <th>Ações</th>
@@ -66,6 +67,7 @@
             <td class="td-nome">{{ lider.nome }}</td>
             <td class="td-bairro">{{ lider.bairro || '—' }}</td>
             <td class="td-votos">{{ lider.votos_estimados?.toLocaleString('pt-BR') ?? '—' }}</td>
+            <td v-if="mostrarSalario" class="td-salario">{{ formatarMoeda(lider.salario_mensal) }}</td>
             <td class="td-usuario">{{ lider.criado_por_nome || '—' }}</td>
             <td>
               <span :class="lider.status ? 'badge-ativo' : 'badge-inativo'">
@@ -100,14 +102,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useLiderStore } from '@/stores/liderStore.js'
+import { useAuthStore } from '@/stores/authStore.js'
 import AlertaMensagem from '@/components/AlertaMensagem.vue'
 
 const roteador = useRouter()
 const store    = useLiderStore()
+const authStore = useAuthStore()
 const busca    = ref('')
+const mostrarSalario = computed(() => authStore.usuario?.perfil === 'admin')
 
 onMounted(() => store.carregarLideres())
 
@@ -117,6 +122,15 @@ function pesquisar() {
 
 function ver(id)    { roteador.push({ name: 'lideres-detalhe', params: { id } }) }
 function editar(id) { roteador.push({ name: 'lideres-editar',  params: { id } }) }
+
+function formatarMoeda(valor) {
+  if (valor === null || valor === undefined || valor === '') return '—'
+
+  return Number(valor).toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  })
+}
 
 async function remover(id) {
   if (!confirm('Confirma a remoção deste líder?')) return

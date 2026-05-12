@@ -74,9 +74,9 @@ class LiderRepositorio
     {
         $stmt = $this->pdo->prepare("
             INSERT INTO sige.lideres
-                (nome, cpf, cpf_hash, telefone, bairro, votos_estimados, observacoes, status, criado_por)
+                (nome, cpf, cpf_hash, telefone, bairro, votos_estimados, salario_mensal, equipe_area, equipe_funcao, observacoes, status, criado_por)
             VALUES
-                (:nome, :cpf, :cpf_hash, :telefone, :bairro, :votos_estimados, :observacoes, :status, :criado_por)
+                (:nome, :cpf, :cpf_hash, :telefone, :bairro, :votos_estimados, :salario_mensal, :equipe_area, :equipe_funcao, :observacoes, :status, :criado_por)
             RETURNING id
         ");
 
@@ -87,6 +87,9 @@ class LiderRepositorio
             ':telefone'        => $dados['telefone'] ?? null,
             ':bairro'          => $dados['bairro'] ?? null,
             ':votos_estimados' => $dados['votos_estimados'] ?? 0,
+            ':salario_mensal'  => $dados['salario_mensal'] ?? null,
+            ':equipe_area'     => $dados['equipe_area'] ?? null,
+            ':equipe_funcao'   => $dados['equipe_funcao'] ?? null,
             ':observacoes'     => $dados['observacoes'] ?? null,
             ':status'          => isset($dados['status']) ? (bool) $dados['status'] : true,
             ':criado_por'      => $dados['criado_por'] ?? null,
@@ -106,6 +109,9 @@ class LiderRepositorio
             'telefone'        => ':telefone',
             'bairro'          => ':bairro',
             'votos_estimados' => ':votos_estimados',
+            'salario_mensal'  => ':salario_mensal',
+            'equipe_area'     => ':equipe_area',
+            'equipe_funcao'   => ':equipe_funcao',
             'observacoes'     => ':observacoes',
             'status'          => ':status',
         ];
@@ -133,11 +139,7 @@ class LiderRepositorio
 
     public function remover(string $id): bool
     {
-        $stmt = $this->pdo->prepare("
-            UPDATE sige.lideres
-            SET excluido_em = NOW()
-            WHERE id = :id AND excluido_em IS NULL
-        ");
+        $stmt = $this->pdo->prepare("\n            UPDATE sige.lideres\n            SET excluido_em = NOW()\n            WHERE id = :id AND excluido_em IS NULL\n        ");
         $stmt->execute([':id' => $id]);
 
         return $stmt->rowCount() > 0;

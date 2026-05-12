@@ -40,4 +40,28 @@ class RelatorioController
         $dados = $this->servico->consolidado();
         Resposta::sucesso($dados);
     }
+
+    public function combustivelSemanal(Requisicao $req): void
+    {
+        $dados = $this->servico->combustivelSemanal();
+        Resposta::sucesso($dados);
+    }
+
+    public function combustivelMensal(Requisicao $req): void
+    {
+        $dados = $this->servico->combustivelMensal();
+        Resposta::sucesso($dados);
+    }
+
+    public function combustivelPorLider(Requisicao $req): void
+    {
+        $dados = $this->servico->combustivelPorLider();
+        Resposta::sucesso($dados);
+    }
+
+    public function combustivelAlertas(Requisicao $req): void
+    {
+        $dados = $this->servico->combustivelAlertas();
+        Resposta::sucesso($dados);
+    }
 }

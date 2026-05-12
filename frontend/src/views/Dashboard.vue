@@ -5,13 +5,14 @@
         <span class="hero-eyebrow">Centro de comando</span>
         <h1 class="hero-titulo">{{ saudacao }}, {{ primeiroNome }}</h1>
         <p class="hero-subtitulo">
-          Monitore a operação política, acompanhe o potencial eleitoral da base e acesse os módulos críticos a partir de um painel único.
+          Monitore as lideranças ativas, acompanhe o potencial eleitoral e visualize o custo mensal da operação em um painel único.
         </p>
 
         <div class="hero-chips">
           <span class="hero-chip">Perfil: {{ perfilLabel }}</span>
           <span class="hero-chip">{{ formatarNumero(totalLideres) }} líderes mapeados</span>
-          <span class="hero-chip">{{ formatarNumero(totalApoiadores) }} apoiadores registrados</span>
+          <span class="hero-chip">{{ formatarMoeda(totalFolhaLideres) }} de folha mensal</span>
+          <span class="hero-chip">{{ formatarMoeda(totalGastoCombustivelMes) }} em combustível no mês</span>
         </div>
       </div>
 
@@ -30,9 +31,9 @@
       </article>
 
       <article class="metrica-card">
-        <span class="metrica-label">Apoiadores</span>
-        <strong class="metrica-valor">{{ formatarNumero(totalApoiadores) }}</strong>
-        <span class="metrica-ajuda">Base vinculada em crescimento</span>
+        <span class="metrica-label">Folha mensal</span>
+        <strong class="metrica-valor">{{ formatarMoeda(totalFolhaLideres) }}</strong>
+        <span class="metrica-ajuda">Custo contratual das lideranças</span>
       </article>
 
       <article class="metrica-card">
@@ -42,9 +43,9 @@
       </article>
 
       <article class="metrica-card metrica-card--forte">
-        <span class="metrica-label">Conversão confirmada</span>
-        <strong class="metrica-valor">{{ taxaConversao }}</strong>
-        <span class="metrica-ajuda">Percentual da base já confirmada como apoio</span>
+        <span class="metrica-label">Custo operacional</span>
+        <strong class="metrica-valor">{{ formatarMoeda(totalCustoOperacionalMes) }}</strong>
+        <span class="metrica-ajuda">Folha mensal somada ao combustível do mês</span>
       </article>
     </section>
 
@@ -75,6 +76,23 @@
             <span class="modulo-link">Abrir módulo</span>
           </button>
 
+          <button class="modulo-card modulo-card--combustivel" @click="ir('/combustivel')">
+            <div class="modulo-topo">
+              <span class="modulo-icone">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 21h12"/>
+                  <path d="M5 21V7a2 2 0 0 1 2-2h5a2 2 0 0 1 2 2v14"/>
+                  <path d="M14 11h2a2 2 0 0 1 2 2v8"/>
+                  <path d="M8 9h4"/>
+                </svg>
+              </span>
+              <span class="modulo-badge">{{ formatarNumero(totalAbastecimentosCombustivel) }}</span>
+            </div>
+            <strong class="modulo-titulo">Combustível</strong>
+            <p class="modulo-descricao">Controle financeiro dos abastecimentos por líder, placa e período de operação.</p>
+            <span class="modulo-link">Abrir módulo</span>
+          </button>
+
           <button class="modulo-card modulo-card--lideres" @click="ir('/lideres')">
             <div class="modulo-topo">
               <span class="modulo-icone">
@@ -89,20 +107,6 @@
             </div>
             <strong class="modulo-titulo">Líderes</strong>
             <p class="modulo-descricao">Gestão de lideranças, regiões prioritárias e estimativas eleitorais.</p>
-            <span class="modulo-link">Abrir módulo</span>
-          </button>
-
-          <button class="modulo-card modulo-card--apoiadores" @click="ir('/apoiadores')">
-            <div class="modulo-topo">
-              <span class="modulo-icone">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                </svg>
-              </span>
-              <span class="modulo-badge">{{ formatarNumero(totalApoiadores) }}</span>
-            </div>
-            <strong class="modulo-titulo">Apoiadores</strong>
-            <p class="modulo-descricao">Base territorial, segmentação política e inteligência de vínculo.</p>
             <span class="modulo-link">Abrir módulo</span>
           </button>
 
@@ -143,14 +147,14 @@
             <span>Abra um pedido de visita ou reunião para análise do gestor da agenda.</span>
           </button>
 
-          <button class="acao-btn acao-btn--verde" @click="ir('/apoiadores/novo')">
-            <strong>Novo apoiador</strong>
-            <span>Adicione um contato à base e vincule o responsável político.</span>
+          <button class="acao-btn acao-btn--combustivel" @click="ir('/combustivel/novo')">
+            <strong>Novo abastecimento</strong>
+            <span>Registre um gasto de combustível e vincule o lançamento ao líder responsável.</span>
           </button>
 
           <button class="acao-btn acao-btn--escuro" @click="ir('/relatorios')">
             <strong>Analisar relatórios</strong>
-            <span>Abra o painel analítico e identifique concentração, risco e conversão.</span>
+            <span>Abra o painel analítico e acompanhe custos, desempenho e alertas operacionais.</span>
           </button>
         </div>
       </article>
@@ -161,21 +165,19 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useLiderStore } from '@/stores/liderStore.js'
-import { useApoiadorStore } from '@/stores/apoiadorStore.js'
 import { useAuthStore } from '@/stores/authStore.js'
 import relatorioServico from '@/services/relatorioServico.js'
 
 const roteador = useRouter()
-const liderStore = useLiderStore()
-const apoiadorStore = useApoiadorStore()
 const authStore = useAuthStore()
 
 const totalLideres = ref(0)
-const totalApoiadores = ref(0)
+const totalFolhaLideres = ref(0)
 const totalVotosEstimados = ref(0)
 const mediaVotosPorLider = ref(0)
-const totalApoiadoresConfirmados = ref(0)
+const totalAbastecimentosCombustivel = ref(0)
+const totalGastoCombustivelMes = ref(0)
+const totalCustoOperacionalMes = ref(0)
 
 const primeiroNome = computed(() => (authStore.usuario?.nome || 'Operador').split(' ')[0])
 const saudacao = computed(() => {
@@ -195,11 +197,6 @@ const perfilLabel = computed(() => {
 
   return mapa[authStore.usuario?.perfil] || authStore.usuario?.perfil || 'Operador'
 })
-const taxaConversao = computed(() => {
-  if (!totalApoiadores.value) return '0%'
-  const taxa = (Number(totalApoiadoresConfirmados.value || 0) / Number(totalApoiadores.value || 0)) * 100
-  return `${taxa.toFixed(1).replace('.', ',')}%`
-})
 
 function ir(rota) {
   roteador.push(rota)
@@ -216,18 +213,23 @@ function formatarDecimal(valor) {
   })
 }
 
-onMounted(async () => {
-  const [_, __, relatorio] = await Promise.all([
-    liderStore.carregarLideres(1, 1),
-    apoiadorStore.carregarApoiadores(1, 1),
-    relatorioServico.resumo(),
-  ])
+function formatarMoeda(valor) {
+  return Number(valor || 0).toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  })
+}
 
-  totalLideres.value = Number(liderStore.paginacao?.total || relatorio?.dados?.total_lideres || 0)
-  totalApoiadores.value = Number(apoiadorStore.paginacao?.total || relatorio?.dados?.total_apoiadores || 0)
+onMounted(async () => {
+  const relatorio = await relatorioServico.resumo()
+
+  totalLideres.value = Number(relatorio?.dados?.total_lideres || 0)
+  totalFolhaLideres.value = Number(relatorio?.dados?.total_folha_lideres_mensal || 0)
   totalVotosEstimados.value = Number(relatorio?.dados?.total_votos_estimados || 0)
   mediaVotosPorLider.value = Number(relatorio?.dados?.media_votos_por_lider || 0)
-  totalApoiadoresConfirmados.value = Number(relatorio?.dados?.total_apoiadores_confirmados || 0)
+  totalAbastecimentosCombustivel.value = Number(relatorio?.dados?.total_abastecimentos_combustivel || 0)
+  totalGastoCombustivelMes.value = Number(relatorio?.dados?.total_gasto_combustivel_mes_atual || 0)
+  totalCustoOperacionalMes.value = Number(relatorio?.dados?.total_custo_operacional_mes_atual || 0)
 })
 </script>
 
@@ -435,9 +437,9 @@ onMounted(async () => {
   box-shadow: 0 14px 24px rgba(15, 118, 110, 0.08);
 }
 
-.modulo-card--apoiadores {
-  background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
-  box-shadow: 0 14px 24px rgba(124, 58, 237, 0.08);
+.modulo-card--combustivel {
+  background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%);
+  box-shadow: 0 14px 24px rgba(249, 115, 22, 0.14);
 }
 
 .modulo-card--relatorios {
@@ -541,6 +543,11 @@ onMounted(async () => {
 .acao-btn--agenda {
   background: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%);
   color: #155e75;
+}
+
+.acao-btn--combustivel {
+  background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%);
+  color: #9a3412;
 }
 
 .acao-btn--escuro {

@@ -23,7 +23,7 @@ class LiderController
         $limite = (int) $req->query('limite', 15);
         $busca  = (string) $req->query('busca', '');
 
-        $resultado = $this->servico->listar($pagina, $limite, $busca);
+        $resultado = $this->servico->listar($pagina, $limite, $busca, $req->auth());
 
         Resposta::paginado(
             $resultado['dados'],
@@ -36,7 +36,7 @@ class LiderController
     public function visualizar(Requisicao $req): void
     {
         $id    = (string) $req->param('id');
-        $lider = $this->servico->buscarPorId($id);
+        $lider = $this->servico->buscarPorId($id, $req->auth());
 
         Resposta::sucesso($lider);
     }
@@ -44,7 +44,7 @@ class LiderController
     public function cadastrar(Requisicao $req): void
     {
         $dados = $req->todosCorpo();
-        $lider = $this->servico->cadastrar($dados);
+        $lider = $this->servico->cadastrar($dados, $req->auth());
 
         Resposta::criado($lider, 'Líder cadastrado com sucesso.');
     }
@@ -53,7 +53,7 @@ class LiderController
     {
         $id    = (string) $req->param('id');
         $dados = $req->todosCorpo();
-        $lider = $this->servico->atualizar($id, $dados);
+        $lider = $this->servico->atualizar($id, $dados, $req->auth());
 
         Resposta::sucesso($lider, 'Líder atualizado com sucesso.');
     }

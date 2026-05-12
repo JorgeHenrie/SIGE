@@ -78,9 +78,13 @@
           <div class="form-secao">
             <div class="form-secao-titulo">
               <span class="form-secao-num">3</span>
-              Dados Eleitorais
+              Dados Eleitorais e Contrato
             </div>
             <div class="form-grid form-grid--2">
+              <div v-if="podeGerenciarContrato" class="form-grupo">
+                <label class="form-label" for="salario_mensal">Salário mensal do contrato <span v-if="!editando" class="obrigatorio">*</span></label>
+                <input id="salario_mensal" v-model="form.salario_mensal" type="number" min="0.01" step="0.01" class="form-input" placeholder="0,00" :required="!editando" />
+              </div>
               <div class="form-grupo">
                 <label class="form-label" for="votos_estimados">Votos Estimados</label>
                 <input id="votos_estimados" v-model.number="form.votos_estimados" type="number" min="0" class="form-input" placeholder="0" />
@@ -121,19 +125,22 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useLiderStore } from '@/stores/liderStore.js'
+import { useAuthStore } from '@/stores/authStore.js'
 import AlertaMensagem from '@/components/AlertaMensagem.vue'
 
 const rota      = useRoute()
 const roteador  = useRouter()
 const store     = useLiderStore()
+const authStore = useAuthStore()
 
 const editando   = computed(() => !!rota.params.id)
+const podeGerenciarContrato = computed(() => authStore.usuario?.perfil === 'admin')
 const carregando = ref(false)
 const mensagem   = reactive({ tipo: '', texto: '' })
 
 const form = reactive({
   nome: '', cpf: '', telefone: '', bairro: '',
-  votos_estimados: 0, observacoes: '', status: true,
+  votos_estimados: 0, salario_mensal: '', observacoes: '', status: true,
 })
 
 onMounted(async () => {
@@ -141,9 +148,13 @@ onMounted(async () => {
     const lider = await store.buscarLider(rota.params.id)
     if (lider) {
       Object.assign(form, {
-        nome: lider.nome, telefone: lider.telefone || '',
-        bairro: lider.bairro || '', votos_estimados: lider.votos_estimados,
-        observacoes: lider.observacoes || '', status: lider.status,
+        nome: lider.nome,
+        telefone: lider.telefone || '',
+        bairro: lider.bairro || '',
+        votos_estimados: lider.votos_estimados,
+        salario_mensal: lider.salario_mensal ?? '',
+        observacoes: lider.observacoes || '',
+        status: lider.status,
       })
     }
   }
@@ -153,12 +164,26 @@ async function salvar() {
   carregando.value = true
   mensagem.texto   = ''
   try {
+    const payload = {
+      ...form,
+    }
+
+    if (podeGerenciarContrato.value) {
+      if (!editando.value || (form.salario_mensal !== '' && form.salario_mensal !== null)) {
+        payload.salario_mensal = Number(form.salario_mensal)
+      } else {
+        delete payload.salario_mensal
+      }
+    } else {
+      delete payload.salario_mensal
+    }
+
     if (editando.value) {
-      await store.atualizarLider(rota.params.id, form)
+      await store.atualizarLider(rota.params.id, payload)
       mensagem.tipo  = 'sucesso'
       mensagem.texto = 'Líder atualizado com sucesso.'
     } else {
-      await store.cadastrarLider(form)
+      await store.cadastrarLider(payload)
       roteador.push({ name: 'lideres' })
     }
   } catch (e) {
